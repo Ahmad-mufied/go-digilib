@@ -13,4 +13,7 @@ type BookInterfaces interface {
 	CreateBook(book *Book, physicalDetails *BookPhysicalDetails) (int, error)
 	GetStockById(bookID int) (int, error)
 	CheckBookBySKU(sku string) (bool, error)
+	GetBookById(bookID int) (*Book, error)
+	GetDetailBookById(bookID int) (*Book, *BookPhysicalDetails, error)
+	GetAllBooks() ([]Book, error)
 }

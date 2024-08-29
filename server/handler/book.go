@@ -83,3 +83,17 @@ func CreateBook(c echo.Context) error {
 	})
 
 }
+
+func GetAllBooks(c echo.Context) error {
+
+	books, err := repo.Book.GetAllBooks()
+	if err != nil {
+		return utils.HandleError(c, constants.ErrInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, model.JSONResponse{
+		Status:  constants.ResponseStatusSuccess,
+		Message: "Success Getting All Books",
+		Data:    books,
+	})
+}

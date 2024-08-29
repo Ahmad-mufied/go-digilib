@@ -85,3 +85,44 @@ func (b *Book) CheckBookBySKU(sku string) (bool, error) {
 
 	return count > 0, nil
 }
+
+func (b *Book) GetBookById(bookID int) (*Book, error) {
+
+	var book Book
+	err := db.Get(&book, "SELECT id, category_id, isbn, sku, author, title, image, pages, language, description, stock, status, borrowed_count, published_at, base_price, created_at, updated_at FROM books WHERE id = $1", bookID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &book, nil
+}
+
+func (b *Book) GetDetailBookById(bookID int) (*Book, *BookPhysicalDetails, error) {
+
+	// Get book data
+	book, err := b.GetBookById(bookID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Get book physical details data
+	var physicalDetails BookPhysicalDetails
+	err = db.Get(&physicalDetails, "SELECT book_id, weight, height, width FROM book_physical_details WHERE book_id = $1", bookID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return book, &physicalDetails, nil
+}
+
+func (b *Book) GetAllBooks() ([]Book, error) {
+
+	var books []Book
+	sqlStatement := `SELECT id, category_id, isbn, sku, author, title, image, pages, language, description, stock, status, borrowed_count, published_at, base_price, created_at, updated_at FROM books`
+	err := db.Select(&books, sqlStatement)
+	if err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}
