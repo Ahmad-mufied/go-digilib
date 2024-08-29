@@ -23,6 +23,7 @@ func Routes(e *echo.Echo) {
 	// Book Routes
 	e.POST("/books", handler.CreateBook, echoJWT.WithConfig(config))
 	e.GET("/books", handler.GetAllBooks, echoJWT.WithConfig(config))
+	e.PUT("/books", handler.UpdateBookStock, echoJWT.WithConfig(config))
 	e.GET("/books/:id", handler.GetBookDetails, echoJWT.WithConfig(config))
 
 }

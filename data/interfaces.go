@@ -16,4 +16,6 @@ type BookInterfaces interface {
 	GetBookById(bookID uint) (*Book, error)
 	GetDetailBookById(bookID uint) (*Book, *BookPhysicalDetails, error)
 	GetAllBooks() ([]Book, error)
+	UpdateBookStock(bookID uint, stock int) error
+	CheckBookById(bookID uint) error
 }

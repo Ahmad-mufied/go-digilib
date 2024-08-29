@@ -27,9 +27,14 @@ type PhysicalDetails struct {
 	Width  int     `json:"width" validate:"required"`
 }
 
-type AddBookResponse struct {
+type CreateUpdateBookResponse struct {
 	ID     uint   `json:"id"`
 	Title  string `json:"title"`
 	Status string `json:"status"`
 	Stock  int    `json:"stock"`
+}
+
+type UpdateBookRequest struct {
+	BookId uint `json:"book_id" validate:"required"`
+	Stock  int  `json:"stock" `
 }

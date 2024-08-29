@@ -127,3 +127,32 @@ func (b *Book) GetAllBooks() ([]Book, error) {
 
 	return books, nil
 }
+
+func (b *Book) UpdateBookStock(bookID uint, stock int) error {
+
+	tx := db.MustBegin()
+
+	_, err := tx.Exec(`UPDATE books SET stock = $1 WHERE id = $2`, stock, bookID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (b *Book) CheckBookById(bookID uint) error {
+
+	count := 0
+	err := db.Get(&count, "SELECT 1 FROM books WHERE id = $1", bookID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -74,7 +74,7 @@ func CreateBook(c echo.Context) error {
 	return c.JSON(http.StatusCreated, model.JSONResponse{
 		Status:  constants.ResponseStatusSuccess,
 		Message: "Success create book",
-		Data: model.AddBookResponse{
+		Data: model.CreateUpdateBookResponse{
 			ID:     bookID,
 			Title:  book.Title,
 			Status: string(book.Status),
@@ -120,6 +120,56 @@ func GetBookDetails(c echo.Context) error {
 	return c.JSON(http.StatusOK, model.JSONResponse{
 		Status:  constants.ResponseStatusSuccess,
 		Message: "Success Getting Book Details",
+		Data:    response,
+	})
+}
+
+func UpdateBookStock(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*middleware.JWTCustomClaims)
+	role := claims.Role
+
+	if role != "admin" {
+		return utils.HandleError(c, constants.ErrForbidden, "Only admin can update stock")
+	}
+
+	updateStockRequest := new(model.UpdateBookRequest)
+	err := c.Bind(updateStockRequest)
+	if err != nil {
+		return utils.HandleError(c, constants.ErrBadRequest, "Invalid input")
+	}
+
+	// Validate
+	err = validate.Struct(updateStockRequest)
+	if err != nil {
+		// Format the validation errors
+		errors := utils.FormatValidationErrors(err)
+		return utils.HandleValidationError(c, errors)
+	}
+
+	// Check if the book exists
+	err = repo.Book.CheckBookById(updateStockRequest.BookId)
+	if err != nil {
+		return utils.HandleError(c, constants.ErrNotFound, "Book not found")
+	}
+
+	err = repo.Book.UpdateBookStock(updateStockRequest.BookId, updateStockRequest.Stock)
+	if err != nil {
+		return utils.HandleError(c, constants.ErrInternalServerError, "Failed to update stock")
+	}
+
+	book, _ := repo.Book.GetBookById(updateStockRequest.BookId)
+
+	response := model.CreateUpdateBookResponse{
+		ID:     book.ID,
+		Title:  book.Title,
+		Status: string(book.Status),
+		Stock:  updateStockRequest.Stock,
+	}
+
+	return c.JSON(http.StatusOK, model.JSONResponse{
+		Status:  constants.ResponseStatusSuccess,
+		Message: "Success update stock",
 		Data:    response,
 	})
 }
