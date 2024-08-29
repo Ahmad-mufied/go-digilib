@@ -8,3 +8,9 @@ type UserInterfaces interface {
 	GetUserByEmail(email string) (*User, error)
 	GetPasswordByEmail(email string) (string, error)
 }
+
+type BookInterfaces interface {
+	CreateBook(book *Book, physicalDetails *BookPhysicalDetails) (int, error)
+	GetStockById(bookID int) (int, error)
+	CheckBookBySKU(sku string) (bool, error)
+}

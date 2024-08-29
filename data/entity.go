@@ -9,9 +9,11 @@ func New(dbPool *sqlx.DB) *Models {
 
 	return &Models{
 		User: &User{},
+		Book: &Book{},
 	}
 }
 
 type Models struct {
 	User UserInterfaces
+	Book BookInterfaces
 }

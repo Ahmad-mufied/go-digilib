@@ -27,7 +27,7 @@ func Register(c echo.Context) error {
 	}
 
 	// Check if email is already registered
-	isExist, err := entity.User.CheckEmail(userPayload.Email)
+	isExist, err := repo.User.CheckEmail(userPayload.Email)
 	if err != nil {
 		return utils.HandleError(c, constants.ErrInternalServerError, err.Error())
 	}
@@ -55,7 +55,7 @@ func Register(c echo.Context) error {
 	user.Status = constants.UserStatusActive
 	user.Role = constants.UserRoleReader
 
-	userId, err := entity.User.CreateUser(user)
+	userId, err := repo.User.CreateUser(user)
 	if err != nil {
 		return utils.HandleError(c, constants.ErrInternalServerError, err.Error())
 	}
@@ -85,7 +85,7 @@ func Login(c echo.Context) error {
 	}
 
 	// Get password by email
-	user, err := entity.User.GetUserByEmail(userPayload.Email)
+	user, err := repo.User.GetUserByEmail(userPayload.Email)
 	if err != nil {
 		return utils.HandleError(c, constants.ErrInternalServerError, err.Error())
 	}
