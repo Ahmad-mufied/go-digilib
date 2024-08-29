@@ -17,3 +17,35 @@ var (
 	ErrUnauthorized        = utils.NewAPIError(http.StatusUnauthorized, "Unauthorized access", "")
 	ErrConflict            = utils.NewAPIError(http.StatusConflict, "Resource already exists", "")
 )
+
+type UsersStatusEnum string
+type BorrowStatusEnum string
+type DurationType string
+type UserRoleEnum string
+type PaymentStatusEnum string
+type BookStatusEnum string
+
+const (
+	UserStatusActive   UsersStatusEnum = "active"
+	UserStatusInactive UsersStatusEnum = "inactive"
+	UserStatusBanned   UsersStatusEnum = "banned"
+
+	BorrowStatusReturned BorrowStatusEnum = "returned"
+	BorrowStatusSuccess  BorrowStatusEnum = "success"
+	BorrowStatusPending  BorrowStatusEnum = "pending"
+	BorrowStatusCancel   BorrowStatusEnum = "cancel"
+
+	DurationTypeDaily   DurationType = "daily"
+	DurationTypeWeekly  DurationType = "weekly"
+	DurationTypeMonthly DurationType = "monthly"
+
+	UserRoleReader UserRoleEnum = "reader"
+	UserRoleAdmin  UserRoleEnum = "admin"
+
+	PaymentStatusPending   PaymentStatusEnum = "pending"
+	PaymentStatusConfirmed PaymentStatusEnum = "confirmed"
+	PaymentStatusRefunded  PaymentStatusEnum = "refunded"
+
+	BookStatusAvailable    BookStatusEnum = "available"
+	BookStatusNotAvailable BookStatusEnum = "not available"
+)

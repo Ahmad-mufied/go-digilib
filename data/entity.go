@@ -7,7 +7,11 @@ var db *sqlx.DB
 func New(dbPool *sqlx.DB) *Models {
 	db = dbPool
 
-	return &Models{}
+	return &Models{
+		User: &User{},
+	}
 }
 
-type Models struct{}
+type Models struct {
+	User UserInterfaces
+}
