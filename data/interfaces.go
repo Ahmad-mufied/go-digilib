@@ -10,10 +10,10 @@ type UserInterfaces interface {
 }
 
 type BookInterfaces interface {
-	CreateBook(book *Book, physicalDetails *BookPhysicalDetails) (int, error)
-	GetStockById(bookID int) (int, error)
+	CreateBook(book *Book, physicalDetails *BookPhysicalDetails) (uint, error)
+	GetStockById(bookID uint) (int, error)
 	CheckBookBySKU(sku string) (bool, error)
-	GetBookById(bookID int) (*Book, error)
-	GetDetailBookById(bookID int) (*Book, *BookPhysicalDetails, error)
+	GetBookById(bookID uint) (*Book, error)
+	GetDetailBookById(bookID uint) (*Book, *BookPhysicalDetails, error)
 	GetAllBooks() ([]Book, error)
 }

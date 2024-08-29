@@ -3,22 +3,23 @@ package data
 import (
 	"github.com/Ahmad-mufied/go-digilib/constants"
 	"github.com/jmoiron/sqlx/types"
+	"github.com/pkg/errors"
 	"time"
 )
 
 // Book implement Books table
 type Book struct {
-	ID            int                      `db:"id"`
-	CategoryID    int                      `db:"category_id"`
+	ID            uint                     `db:"id"`
+	CategoryID    uint                     `db:"category_id"`
 	ISBN          string                   `db:"isbn"`
 	SKU           string                   `db:"sku"`
 	Author        types.JSONText           `db:"author"`
 	Title         string                   `db:"title"`
 	Image         string                   `db:"image"`
-	Pages         int16                    `db:"pages"`
+	Pages         int                      `db:"pages"`
 	Language      string                   `db:"language"`
 	Description   string                   `db:"description"`
-	Stock         int16                    `db:"stock"`
+	Stock         int                      `db:"stock"`
 	Status        constants.BookStatusEnum `db:"status"`
 	BorrowedCount int                      `db:"borrowed_count"`
 	PublishedAt   *time.Time               `db:"published_at"`
@@ -30,11 +31,11 @@ type Book struct {
 type BookPhysicalDetails struct {
 	BookID int     `db:"book_id"`
 	Weight float64 `db:"weight"`
-	Height int16   `db:"height"`
-	Width  int16   `db:"width"`
+	Height int     `db:"height"`
+	Width  int     `db:"width"`
 }
 
-func (b *Book) CreateBook(book *Book, physicalDetails *BookPhysicalDetails) (int, error) {
+func (b *Book) CreateBook(book *Book, physicalDetails *BookPhysicalDetails) (uint, error) {
 
 	tx := db.MustBegin()
 
@@ -60,11 +61,11 @@ func (b *Book) CreateBook(book *Book, physicalDetails *BookPhysicalDetails) (int
 		return 0, err
 	}
 
-	return lastInsertID, nil
+	return uint(lastInsertID), nil
 
 }
 
-func (b *Book) GetStockById(bookID int) (int, error) {
+func (b *Book) GetStockById(bookID uint) (int, error) {
 
 	var stock int
 	err := db.Get(&stock, "SELECT stock FROM books WHERE id = $1", bookID)
@@ -86,7 +87,7 @@ func (b *Book) CheckBookBySKU(sku string) (bool, error) {
 	return count > 0, nil
 }
 
-func (b *Book) GetBookById(bookID int) (*Book, error) {
+func (b *Book) GetBookById(bookID uint) (*Book, error) {
 
 	var book Book
 	err := db.Get(&book, "SELECT id, category_id, isbn, sku, author, title, image, pages, language, description, stock, status, borrowed_count, published_at, base_price, created_at, updated_at FROM books WHERE id = $1", bookID)
@@ -97,12 +98,12 @@ func (b *Book) GetBookById(bookID int) (*Book, error) {
 	return &book, nil
 }
 
-func (b *Book) GetDetailBookById(bookID int) (*Book, *BookPhysicalDetails, error) {
+func (b *Book) GetDetailBookById(bookID uint) (*Book, *BookPhysicalDetails, error) {
 
 	// Get book data
 	book, err := b.GetBookById(bookID)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.New("Book not found")
 	}
 
 	// Get book physical details data

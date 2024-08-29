@@ -5,11 +5,13 @@ go 1.22.5
 require (
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/iancoleman/strcase v0.3.0
 	github.com/jackc/pgconn v1.14.3
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/labstack/echo-jwt/v4 v4.2.0
 	github.com/labstack/echo/v4 v4.12.0
+	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.19.0
 	golang.org/x/crypto v0.22.0
 )
@@ -21,7 +23,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect

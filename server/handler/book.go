@@ -21,7 +21,7 @@ func CreateBook(c echo.Context) error {
 		return utils.HandleError(c, constants.ErrForbidden, "Only admin can create a book")
 	}
 
-	var addBookRequest model.AddBookRequest
+	var addBookRequest model.BooksDetails
 	err := c.Bind(&addBookRequest)
 	if err != nil {
 		return utils.HandleError(c, constants.ErrBadRequest, "Invalid input")
@@ -53,8 +53,8 @@ func CreateBook(c echo.Context) error {
 		}
 	}
 
-	// Convert AddBookRequest to Book and BookPhysicalDetails
-	book, d, err := converter.ConvertAddBookRequestToBook(addBookRequest)
+	// Convert BooksDetails to Book and BookPhysicalDetails
+	book, d, err := converter.ConvertAddBookRequestToBook(&addBookRequest)
 	if err != nil {
 		return utils.HandleError(c, constants.ErrInternalServerError, err.Error())
 	}
@@ -95,5 +95,31 @@ func GetAllBooks(c echo.Context) error {
 		Status:  constants.ResponseStatusSuccess,
 		Message: "Success Getting All Books",
 		Data:    books,
+	})
+}
+
+func GetBookDetails(c echo.Context) error {
+	bookID := c.Param("id")
+
+	bookIdUint := utils.StringToUint(bookID)
+
+	book, bookDetail, err := repo.Book.GetDetailBookById(bookIdUint)
+	if err != nil {
+		return utils.HandleError(c, constants.ErrNotFound, "Book not found")
+	}
+
+	if book == nil {
+		return utils.HandleError(c, constants.ErrNotFound, "Book not found")
+	}
+
+	response, err := converter.ConvertToBooksDetails(book, bookDetail)
+	if err != nil {
+		return utils.HandleError(c, constants.ErrInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, model.JSONResponse{
+		Status:  constants.ResponseStatusSuccess,
+		Message: "Success Getting Book Details",
+		Data:    response,
 	})
 }

@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-// ConvertAddBookRequestToBook converts AddBookRequest to Book and BookPhysicalDetails.
-func ConvertAddBookRequestToBook(req model.AddBookRequest) (*data.Book, *data.BookPhysicalDetails, error) {
+// ConvertAddBookRequestToBook converts BooksDetails to Book and BookPhysicalDetails.
+func ConvertAddBookRequestToBook(req *model.BooksDetails) (*data.Book, *data.BookPhysicalDetails, error) {
 	// Parse PublishedAt string to time.Time
 	var publishedAt *time.Time
 	if req.PublishedAt != nil {
@@ -52,4 +52,43 @@ func ConvertAddBookRequestToBook(req model.AddBookRequest) (*data.Book, *data.Bo
 	}
 
 	return &book, &physicalDetails, nil
+}
+
+type PhysicalDetails struct {
+	Weight float64
+	Height int
+	Width  int
+}
+
+// ConvertToBooksDetails Function to convert Book and BookPhysicalDetails to BooksDetails
+func ConvertToBooksDetails(book *data.Book, physicalDetails *data.BookPhysicalDetails) (*model.BooksDetails, error) {
+	details := new(model.BooksDetails)
+	newPhysicalDetails := new(model.PhysicalDetails)
+
+	newPhysicalDetails.Weight = physicalDetails.Weight
+	newPhysicalDetails.Height = physicalDetails.Height
+	newPhysicalDetails.Width = physicalDetails.Width
+
+	details.Id = book.ID
+	details.CategoryID = book.CategoryID
+	details.ISBN = book.ISBN
+	details.SKU = book.SKU
+	details.Author = book.Author
+	details.Title = book.Title
+	details.Image = book.Image
+	details.Pages = book.Pages
+	details.Language = book.Language
+	details.Description = book.Description
+	details.Stock = book.Stock
+	details.Status = string(book.Status)
+	details.BorrowedCount = book.BorrowedCount
+	if book.PublishedAt != nil {
+		publishedAtStr := book.PublishedAt.Format(time.RFC3339)
+		details.PublishedAt = &publishedAtStr
+	}
+	details.BasePrice = book.BasePrice
+
+	details.PhysicalDetails = *newPhysicalDetails
+
+	return details, nil
 }
