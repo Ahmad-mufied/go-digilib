@@ -34,7 +34,7 @@ CREATE TABLE users
     id         SERIAL PRIMARY KEY,
     full_name  VARCHAR(100)    NOT NULL,
     username   VARCHAR(100)    NOT NULL,
-    email      VARCHAR(100)    NOT NULL,
+    email      VARCHAR(100)    NOT NULL UNIQUE,
     password   VARCHAR(100)    NOT NULL,
     status     UsersStatusEnum NOT NULL DEFAULT 'inactive',
     role       UserRoleEnum    NOT NULL DEFAULT 'reader',
