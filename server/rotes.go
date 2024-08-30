@@ -13,6 +13,8 @@ func Routes(e *echo.Echo) {
 	e.POST("/users/register", handler.Register)
 	e.POST("/users/login", handler.Login)
 
+	e.POST("/xendit-webhook", handler.HandleWebhook)
+
 	config := echoJWT.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(middleware.JWTCustomClaims)
@@ -29,5 +31,11 @@ func Routes(e *echo.Echo) {
 	// Deposit Routes
 	e.POST("/deposits", handler.CreateDeposit, echoJWT.WithConfig(config))
 	e.GET("/deposits/:id", handler.GetDepositById, echoJWT.WithConfig(config))
+
+	// Borrow Routes
+	e.POST("/borrows", handler.MakeNewBorrow, echoJWT.WithConfig(config))
+	e.PUT("/borrows", handler.UpdateBorrowReturnedAt, echoJWT.WithConfig(config))
+	e.GET("/borrows", handler.GetAllBorrowsByUserID, echoJWT.WithConfig(config))
+	e.GET("/borrows/:id", handler.GetBorrowById, echoJWT.WithConfig(config))
 
 }

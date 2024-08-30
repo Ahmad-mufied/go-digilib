@@ -20,6 +20,7 @@ type BookInterfaces interface {
 	GetAllBooks() ([]Book, error)
 	UpdateBookStock(bookID uint, stock int) error
 	CheckBookById(bookID uint) error
+	GetBookBasePrice(bookID uint) (float64, error)
 }
 
 type WalletInterfaces interface {
@@ -33,4 +34,18 @@ type DepositInterfaces interface {
 	GetDepositById(depositID uint) (*Deposit, error)
 	UpdateDepositStatus(invoiceUrl string, status constants.PaymentStatusEnum) error
 	UpdateDepositInvoiceURL(depositID uint, invoiceURL string) error
+}
+
+type BorrowInterfaces interface {
+	CreateBorrow(borrow *Borrow) (uint, error)
+	GetBorrowById(borrowID uint) (*Borrow, error)
+	GetAllBorrowsByUserID(userID uint) ([]Borrow, error)
+	UpdateBorrowStatusConfirm(borrowID uint, status constants.BookStatusEnum) error
+	UpdateBorrowReturnedAt(borrowID uint) error
+}
+
+type BorrowPriceInterfaces interface {
+	CreateBorrowPrice(borrowPrice *BorrowPrice) (int, error)
+	GetBorrowPrice(bookID uint, durationType constants.DurationType) (*BorrowPrice, error)
+	UpdateBorrowPrice(borrowPrice *BorrowPrice) error
 }

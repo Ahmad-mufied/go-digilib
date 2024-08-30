@@ -156,3 +156,14 @@ func (b *Book) CheckBookById(bookID uint) error {
 
 	return nil
 }
+
+func (b *Book) GetBookBasePrice(bookID uint) (float64, error) {
+
+	var basePrice float64
+	err := db.Get(&basePrice, "SELECT base_price FROM books WHERE id = $1", bookID)
+	if err != nil {
+		return 0, err
+	}
+
+	return basePrice, nil
+}
