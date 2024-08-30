@@ -55,14 +55,14 @@ func Register(c echo.Context) error {
 	user.Status = constants.UserStatusActive
 	user.Role = constants.UserRoleReader
 
-	userId, err := repo.User.CreateUser(user)
+	userId, walletId, err := repo.User.CreateUser(user)
 	if err != nil {
 		return utils.HandleError(c, constants.ErrInternalServerError, err.Error())
 	}
 
 	user.ID = userId
 
-	userResponse := converter.UserToGetUserResponse(user)
+	userResponse := converter.UserToGetUserResponse(user, walletId)
 
 	return c.JSON(http.StatusCreated, model.JSONResponse{
 		Status:  constants.ResponseStatusSuccess,
@@ -105,7 +105,10 @@ func Login(c echo.Context) error {
 		return utils.HandleError(c, constants.ErrInternalServerError, "Failed to generate token")
 	}
 
-	userDetail := converter.UserToGetUserResponse(user)
+	// Get walletId by userId
+	walletId, err := repo.Wallet.GetWalletIdByUserID(user.ID)
+
+	userDetail := converter.UserToGetUserResponse(user, walletId)
 	response := model.UserLoginResponse{
 		Token:      token,
 		UserDetail: userDetail,

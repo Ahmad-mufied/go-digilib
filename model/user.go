@@ -15,6 +15,7 @@ type UserRegisterRequest struct {
 // response body -> { id, full_name, username, email, status, role, book_count }
 type GetUserResponse struct {
 	ID        uint                      `json:"id"`
+	WalletID  uint                      `json:"wallet_id"`
 	FullName  string                    `json:"FullName"`
 	Username  string                    `json:"username"`
 	Email     string                    `json:"email"`

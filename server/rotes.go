@@ -26,4 +26,8 @@ func Routes(e *echo.Echo) {
 	e.PUT("/books", handler.UpdateBookStock, echoJWT.WithConfig(config))
 	e.GET("/books/:id", handler.GetBookDetails, echoJWT.WithConfig(config))
 
+	// Deposit Routes
+	e.POST("/deposits", handler.CreateDeposit, echoJWT.WithConfig(config))
+	e.GET("/deposits/:id", handler.GetDepositById, echoJWT.WithConfig(config))
+
 }
