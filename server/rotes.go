@@ -32,4 +32,10 @@ func Routes(e *echo.Echo) {
 	e.POST("/deposits", handler.CreateDeposit, echoJWT.WithConfig(config))
 	e.GET("/deposits/:id", handler.GetDepositById, echoJWT.WithConfig(config))
 
+	// Borrow Routes
+	e.POST("/borrows", handler.MakeNewBorrow, echoJWT.WithConfig(config))
+	e.PUT("/borrows", handler.UpdateBorrowReturnedAt, echoJWT.WithConfig(config))
+	e.GET("/borrows", handler.GetAllBorrowsByUserID, echoJWT.WithConfig(config))
+	e.GET("/borrows/:id", handler.GetBorrowById, echoJWT.WithConfig(config))
+
 }
