@@ -13,18 +13,34 @@ type User struct {
 	BookCount int                       `db:"book_count"`
 }
 
-func (u *User) CreateUser(user *User) (uint, error) {
+func (u *User) CreateUser(user *User) (uint, uint, error) {
 
-	sqlStatement := `INSERT INTO users (full_name, username, email, password, status, role, book_count) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
+	tx := db.MustBegin()
 
-	lastInsertID := 0
 	// Insert user data to database
-	err := db.QueryRow(sqlStatement, user.FullName, user.Username, user.Email, user.Password, user.Status, user.Role, user.BookCount).Scan(&lastInsertID)
+	var lastInsertUserId uint
+	sqlStatement := `INSERT INTO users (full_name, username, email, password, status, role, book_count) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
+	err := tx.QueryRow(sqlStatement, user.FullName, user.Username, user.Email, user.Password, user.Status, user.Role, user.BookCount).Scan(&lastInsertUserId)
 	if err != nil {
-		return 0, err
+		tx.Rollback()
+		return 0, 0, err
 	}
 
-	return uint(lastInsertID), nil
+	// Create a new wallet
+	var lastInsertWalletId uint
+	sqlStatement = `INSERT INTO wallets (user_id, balance) VALUES ($1, $2) RETURNING id`
+	err = tx.QueryRow(sqlStatement, lastInsertUserId, 0).Scan(&lastInsertWalletId)
+	if err != nil {
+		tx.Rollback()
+		return 0, 0, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return lastInsertUserId, lastInsertWalletId, nil
 }
 
 func (u *User) GetUserById(userId uint) (*User, error) {

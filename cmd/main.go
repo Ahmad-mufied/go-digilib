@@ -6,6 +6,7 @@ import (
 	"github.com/Ahmad-mufied/go-digilib/data"
 	"github.com/Ahmad-mufied/go-digilib/server"
 	"github.com/Ahmad-mufied/go-digilib/server/handler"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"log"
 )
@@ -15,7 +16,9 @@ func main() {
 	postgresDb := config.InitDB()
 
 	dbModel := data.New(postgresDb)
-	handler.InitHandler(dbModel)
+	validate := validator.New()
+
+	handler.InitHandler(dbModel, validate)
 
 	e := echo.New()
 
