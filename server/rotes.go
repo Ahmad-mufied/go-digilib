@@ -13,6 +13,8 @@ func Routes(e *echo.Echo) {
 	e.POST("/users/register", handler.Register)
 	e.POST("/users/login", handler.Login)
 
+	e.POST("/xendit-webhook", handler.HandleWebhook)
+
 	config := echoJWT.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(middleware.JWTCustomClaims)
