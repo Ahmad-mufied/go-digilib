@@ -1,6 +1,8 @@
 package utils
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // StringToUint converts a string to a uint.
 // If the conversion fails, it returns 0.
